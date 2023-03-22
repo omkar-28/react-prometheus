@@ -39,5 +39,16 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+  </body><script>
+    window.__PROM_REACT_LOAD_FAILURE_TIMEOUT__ = setTimeout(function () {
+      var xhr = new XMLHttpRequest();
+      var str = '# HELP prom_react_app_loaded Application loaded counter\n';
+      str += '# TYPE prom_react_app_loaded counter\n';
+      str += 'prom_react_app_loaded{app_name="StoreApp",status="failure"} 1\n';
+  
+      xhr.open('POST', 'http://localhost:9091/');
+      xhr.setRequestHeader('Content-Type', 'text/plain');
+      xhr.send(str);
+    }, 3000);
+  </script>
 </html>

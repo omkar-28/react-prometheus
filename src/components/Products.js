@@ -1,3 +1,4 @@
+import { Stage, useMetrics, usePerformanceMark } from '@cabify/prom-react';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { add } from '../store/cartSlice';
@@ -6,21 +7,19 @@ import { STATUSES } from '../store/productSlice';
 
 const Products = () => {
     const dispatch = useDispatch();
+    const { observe } = useMetrics();
+
     const { data: products, status } = useSelector((state) => state.product);
     // const [products, setProducts] = useState([]);
 
     useEffect(() => {
         dispatch(fetchProducts());
-        // const fetchProducts = async () => {
-        //     const res = await fetch('https://fakestoreapi.com/products');
-        //     const data = await res.json();
-        //     console.log(data);
-        //     setProducts(data);
-        // };
-        // fetchProducts();
     }, []);
 
+    usePerformanceMark(status === 'loading' ? Stage.Usable : Stage.Complete, 'main-page');
+
     const handleAdd = (product) => {
+        observe('my_addtocart_count', { custom_tag: 'custom value' });
         dispatch(add(product));
     };
 

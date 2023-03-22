@@ -4,10 +4,27 @@ import * as ReactDOMClient from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { MetricsDebugOverlay, MetricsProvider } from '@cabify/prom-react';
+import { customPromMetrics } from './constants';
 
 const container = document.getElementById('root');
+const normalizePath = (path) => {
+    return path;
+};
+
 const root = ReactDOMClient.createRoot(container);
-root.render(<App />);
+root.render(
+    <MetricsProvider
+        appName="StoreApp"
+        owner="my-team"
+        getNormalizedPath={normalizePath}
+
+        metricsAggregatorUrl={'http://localhost:8080/metrics'}
+        customMetrics={customPromMetrics}
+    >
+        <App />
+        <MetricsDebugOverlay withLogger />
+    </MetricsProvider>);
 
 // ReactDOM.render(
 //   <React.StrictMode>
